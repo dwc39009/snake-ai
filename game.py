@@ -42,7 +42,7 @@ class SnakeGameAI:
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
-        self.reset
+        self.reset()
 
     def reset(self):
         # init game state
@@ -56,6 +56,7 @@ class SnakeGameAI:
         self.score = 0
         self.food = None
         self._place_food()
+        self.frame_iteration = 0
 
         
     def _place_food(self):
@@ -80,7 +81,7 @@ class SnakeGameAI:
         # 3. check if game over
         reward = 0
         game_over = False
-        if self._is_collision() or self.frame_iteration > 100*len(self.snake):
+        if self.is_collision() or self.frame_iteration > 100*len(self.snake):
             game_over = True
             reward = -10
             return reward, game_over, self.score
@@ -99,7 +100,7 @@ class SnakeGameAI:
         # 6. return game over and score
         return reward, game_over, self.score
     
-    def _is_collision(self, pt=None):
+    def is_collision(self, pt=None):
         if pt is None:
             pt = self.head
         # hits boundary
@@ -130,7 +131,7 @@ class SnakeGameAI:
         clock_wise = [Direction.RIGHT, Direction.DOWN, Direction.LEFT, Direction.UP]
         idx = clock_wise.index(self.direction)
 
-        if np.aray_equal(action, [1,0,0]):
+        if np.array_equal(action, [1,0,0]):
             new_dir = clock_wise[idx] # no change
         elif np.array_equal(action, [0,1,0]):
             next_idx = (idx + 1) % 4
